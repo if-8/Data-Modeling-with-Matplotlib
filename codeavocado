@@ -1,0 +1,77 @@
+import numpy as np
+import pandas as pd
+
+avocado = pd.read_csv('avocado.csv')
+avocado = pd.DataFrame(avocado,columns=["Date","AveragePrice","Total Volume"])
+print(avocado)
+
+avocado["Date"] = pd.to_datetime(avocado['Date'])
+print(avocado)
+
+import matplotlib.pyplot as plt
+
+# 2a
+(fig, ax) = plt.subplots(2,2,sharex=True)
+
+# 2b
+avocado.sort_values(by=["Date"],inplace=True,ascending=True)
+print(avocado)
+
+# 2c
+ax[0,0].scatter(avocado["Date"], avocado["AveragePrice"], marker='.')
+ax[0,0].set_ylabel('Average Price')
+
+# 2d
+ax[0,1].scatter(avocado["Date"], avocado["Total Volume"], marker='.')
+ax[0,1].set_ylabel('Total Volume')
+
+# 2e
+avocado['TotalRevenue'] = avocado['AveragePrice']*avocado['Total Volume']
+
+avocado1 = avocado.groupby("Date").sum()
+
+avocado1['AveragePrice'] = avocado1['TotalRevenue']/avocado1['Total Volume']
+print(avocado1)
+
+#2f
+ax[1,0].plot(avocado1["AveragePrice"], marker='.')
+ax[1,0].set_ylabel('Average Price')
+ax[1,0].set_xlabel('Time')
+
+#2g
+ax[1,1].plot(avocado1["Total Volume"], marker='.')
+ax[1,1].set_ylabel('Total Volume')
+ax[1,1].set_xlabel('Time')
+
+plt.suptitle("Avocado Prices and Volume Time Series")
+for ax in fig.axes:
+    plt.sca(ax)
+    plt.xticks(rotation=90)
+
+plt.show()
+
+# 3a
+(fig, ax) = plt.subplots(1,2, squeeze=False)
+
+
+# 3b
+avocado['TotalRevenue'] = avocado['AveragePrice']*avocado['Total Volume']
+
+avocado1 = avocado.groupby("Date").sum()
+
+avocado1['AveragePrice'] = avocado1['TotalRevenue']/avocado1['Total Volume']
+print(avocado1)
+
+ax[0,0].plot(avocado1["AveragePrice"].rolling(20).mean(), marker='.')
+ax[0,0].set_ylabel('Average Price')
+ax[0,0].set_xlabel('Time')
+
+ax[0,1].plot(avocado1["Total Volume"].rolling(20).mean(), marker='.')
+ax[0,1].set_ylabel('Total Volume')
+ax[0,1].set_xlabel('Time')
+
+
+plt.suptitle("Avocado Prices and Volume Time Series")
+for ax in fig.axes:
+    plt.sca(ax)
+    plt.xticks(rotation=90)
