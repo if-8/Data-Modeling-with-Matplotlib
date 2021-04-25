@@ -1,0 +1,33 @@
+frame = pd.read_csv('mtcars.csv')
+print(frame)
+
+frame.set_index('Car Name', inplace=True)
+print(frame)
+
+frame = pd.DataFrame(frame, columns=["cyl","gear","hp","mpg"])
+frame.columns = ["Cylinders", "Gear","Horsepower","Miles per Gallon"]
+print(frame)
+
+frame['Powerful'] = frame["Horsepower"] >=110
+print(frame)
+
+df2 = frame.copy()
+# use either del or drop. 
+# del df2['Horsepower']
+df2 = df2.drop('Horsepower', axis=1)
+print(df2)
+
+frame2 = (frame[frame["Miles per Gallon"]>25].sort_values(by=["Horsepower"], ascending=False))
+print(frame2)
+
+new = frame[frame["Powerful"] == True]
+new[new["Miles per Gallon"] == new["Miles per Gallon"].max()]
+
+# # solution 2
+df = frame[frame['Powerful']==True]
+column = df['Miles per Gallon']
+# print(column)
+max_value = column.max()
+# print(max_value)
+print(df[df['Miles per Gallon'] == max_value])
+
